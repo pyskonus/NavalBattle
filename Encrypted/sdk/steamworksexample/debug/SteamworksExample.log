@@ -1,3 +1,0 @@
-﻿StatsAndAchievements.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-gameenginewin32.obj : error LNK2019: unresolved external symbol __imp__XAudio2Create@12 referenced in function "public: __thiscall CGameEngineWin32::CGameEngineWin32(struct HINSTANCE__ *,int,int,int)" (??0CGameEngineWin32@@QAE@PAUHINSTANCE__@@HHH@Z)
-.\Debug\SteamworksExample.exe : fatal error LNK1120: 1 unresolved externals

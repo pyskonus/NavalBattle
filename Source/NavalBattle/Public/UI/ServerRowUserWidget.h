@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "OnlineSessionSettings.h"
 #include "ServerRowUserWidget.generated.h"
 
 class UButton;
 class UTextBlock;
-class FOnlineSessionSearchResult;
 
 UCLASS()
 class NAVALBATTLE_API UServerRowUserWidget : public UUserWidget
@@ -20,6 +20,8 @@ public:
 
 	virtual bool Initialize() override;
 
+	int32 Index;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	UButton* Button_0;
@@ -30,5 +32,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* PingInMs;
 
+	UFUNCTION()
 	void OnClicked();
 };

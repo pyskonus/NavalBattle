@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "OnlineSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineSessionSettings.h"
 #include "NavalBattleGameInstance.generated.h"
-
 
 UCLASS()
 class NAVALBATTLE_API UNavalBattleGameInstance : public UGameInstance
@@ -22,7 +23,7 @@ public:
 	void Host();
 
 	UFUNCTION()
-	void Join(const FString& Address);
+	void Join(int32 Index);
 
 private:
 	IOnlineSessionPtr SessionInterface;
@@ -31,6 +32,7 @@ private:
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionComplete(bool Success);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 

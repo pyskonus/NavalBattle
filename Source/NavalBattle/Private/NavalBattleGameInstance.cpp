@@ -2,9 +2,6 @@
 
 
 #include "NavalBattleGameInstance.h"
-
-#include "OnlineSubsystem.h"
-#include "OnlineSessionSettings.h"
 /*#include "UI/HostJoinGameMode.h"*/
 #include "UI/HostJoinHUD.h"
 
@@ -24,6 +21,7 @@ void UNavalBattleGameInstance::Init()
 	SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UNavalBattleGameInstance::OnCreateSessionComplete);
 	SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UNavalBattleGameInstance::OnDestroySessionComplete);
 	SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UNavalBattleGameInstance::OnFindSessionComplete);
+	SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UNavalBattleGameInstance::OnJoinSessionComplete);
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	if (SessionSearch.IsValid())
@@ -47,12 +45,33 @@ void UNavalBattleGameInstance::Host()
 	}
 }
 
-void UNavalBattleGameInstance::Join(const FString& Address)
+void UNavalBattleGameInstance::Join(int32 Index)
 {
+	UE_LOG(LogTemp, Warning, TEXT("GI Join called"))
+	SessionInterface->JoinSession(0, *OSS_SessionHash, SessionSearch->SearchResults[Index]);
+}
+
+void UNavalBattleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	UE_LOG(LogTemp, Warning, TEXT("JS complete called"))
+	bStillLookingForSessions = false;
+	if (!SessionInterface.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("SInterface invalid"))
+		return;
+	}
+	
+	FString Address;
+	if (!SessionInterface->GetResolvedConnectString(SessionName, Address))
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string"))
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Could not get the connect string"));
+	
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController)) return;
-
+	UE_LOG(LogTemp, Warning, TEXT("Client travel here"))
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+	UE_LOG(LogTemp, Warning, TEXT("After client trave"))
 }
 
 void UNavalBattleGameInstance::CreateSession()
@@ -85,8 +104,8 @@ void UNavalBattleGameInstance::OnCreateSessionComplete(FName SessionName, bool S
 	if (!ensure(World)) return;
 
 	bStillLookingForSessions = false;
-	World->ServerTravel("/Game/HandheldAR/Maps/HandheldARBlankMap?listen");
-}
+	World->ServerTravel("/Game/HostJoinMenu/TestLevel?listen");
+} // /Game/HandheldAR/Maps/HandheldARBlankMap
 
 void UNavalBattleGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
@@ -107,7 +126,7 @@ void UNavalBattleGameInstance::OnFindSessionComplete(bool Success)
 		} else
 		{
 			AHostJoinHUD* MenuHUD = Cast<AHostJoinHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			if (!ensure(MenuHUD)) return;
+			if (!MenuHUD) return;
 			
 			MenuHUD->PopulateServerList(SessionSearch->SearchResults);
 		}

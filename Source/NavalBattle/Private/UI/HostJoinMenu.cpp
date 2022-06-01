@@ -32,12 +32,13 @@ void UHostJoinMenu::MakeScrollboxVisibleAndEmpty()
 	ServerListWidgetSwitcher->SetActiveWidget(ServerList);
 }
 
-void UHostJoinMenu::AddServerRow(const FOnlineSessionSearchResult& SearchResult)
+void UHostJoinMenu::AddServerRow(const FOnlineSessionSearchResult& SearchResult, int32 Index)
 {
 	UServerRowUserWidget* Row = CreateWidget<UServerRowUserWidget>(this, ServerRowBPClass);
 	if (!ensure(Row)) return;
 
 	Row->SetFields(SearchResult);
+	Row->Index = Index;
 
 	ServerList->AddChild(Row);
 }

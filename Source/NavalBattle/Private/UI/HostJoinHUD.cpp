@@ -23,10 +23,12 @@ void AHostJoinHUD::BeginPlay()
 void AHostJoinHUD::PopulateServerList(const TArray<FOnlineSessionSearchResult>& SearchResults)
 {
 	MainWidget->MakeScrollboxVisibleAndEmpty();
-	
+
+	int32 Index = 0;
 	for (const FOnlineSessionSearchResult& SearchResult: SearchResults)
 	{
-		MainWidget->AddServerRow(SearchResult);
+		MainWidget->AddServerRow(SearchResult, Index);
 		UE_LOG(LogTemp, Error, TEXT("Found session %s"), *SearchResult.GetSessionIdStr())
+		Index++;
 	}
 }

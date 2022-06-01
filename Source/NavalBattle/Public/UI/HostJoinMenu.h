@@ -19,7 +19,7 @@ class NAVALBATTLE_API UHostJoinMenu : public UUserWidget
 public:
 	void MakeScrollboxVisibleAndEmpty();
 	
-	void AddServerRow(const FOnlineSessionSearchResult& SearchResult);
+	void AddServerRow(const FOnlineSessionSearchResult& SearchResult, int32 Index);
 
 protected:
 	virtual bool Initialize() override;
