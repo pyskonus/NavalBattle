@@ -104,6 +104,7 @@ void UNavalBattleGameInstance::OnCreateSessionComplete(FName SessionName, bool S
 	if (!ensure(World)) return;
 
 	bStillLookingForSessions = false;
+	
 	World->ServerTravel("/Game/HostJoinMenu/TestLevel?listen");
 } // /Game/HandheldAR/Maps/HandheldARBlankMap
 
